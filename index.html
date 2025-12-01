@@ -121,7 +121,7 @@
         body.dark-mode a {
           color: #bb86fc;
         }
-        body.dark.mode nav a {
+        body.dark-mode nav a {
           color: #fff;
         }
   </style>
@@ -208,7 +208,7 @@
           <label for="message">Message:</label>
           <textarea id="message" name="message" rows="5" placeholder="Type your message here..." required></textarea>
 
-          <button type="submit">Send Message</button>
+          <button type="submit" id="submit-btn">Send Message</button>
         </form>
       </section>
     </main>
@@ -226,7 +226,7 @@
 
       //Conditional Logic - Get the number of projects currently listed
       const projectCount = document.querySelectorAll('.project-item').length;
-      const uniResourcesDiv = document/getElementById('uni-resources');
+      const uniResourcesDiv = document.getElementById('uni-resources');
       const personalProjectsDiv = document.getElementById('personal-projects');
 
       //Logic if fewer than 3, show both. otherwise show Personal only.
