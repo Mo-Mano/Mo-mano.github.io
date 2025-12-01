@@ -12,12 +12,28 @@
       margin: 0;
       padding: 0;
       background-color: #f4f4f4;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
     }
     header {
       background: #333;
             color: #fff;
             padding: 1rem 0;
             text-align: center;
+            position: relative;
+        }
+        /*Dark mode Toggle Styles*/
+        .theme-switch-wrapper {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          display: flex;
+          align-items: center;
+        }
+        .theme-switch-wrapper label {
+          margin-left: 10px;
+          cursor: pointer;
+          font-size: 0.9rem;
         }
         nav ul {
             padding: 0;
@@ -42,6 +58,7 @@
             background: #fff;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
         }
         h2 {
             border-bottom: 2px solid #333;
@@ -83,12 +100,42 @@
         button:hover {
             background: #555;
         }
+        .featured-div {
+          padding: 10px;
+          border: 1px solid #ddd;
+          margin-top: 10px;
+          border-radius: 4px;
+        }
+        body.dark-mode {
+          background-color: #121212;
+          color: #e0e0e0;
+        }
+        body.dark-mode section {
+          background-color: #1e1e1e;
+          color: #e0e0e0;
+          box-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+        body.dark-mode h2 {
+          border-bottom: 2px solid #e0e0e0;
+        }
+        body.dark-mode a {
+          color: #bb86fc;
+        }
+        body.dark.mode nav a {
+          color: #fff;
+        }
   </style>
 </head>
   <body>
     <header>
       <h1 id="welcome-msg">Welcome to My Portfolio</h1>
+
+      <div class="theme-switch-wrapper">
+        <input type="checkbox" id="dark-mode-toggle">
+        <label for="dark-mode-toggle">Dark Mode</label>
+      </div>
     </header>
+
     <nav>
       <ul>
         <li><a href="#about">About</a></li>
@@ -103,7 +150,22 @@
           Hello! I am a Software Development student working on my degree. I enjoy learning about new languages. 
           I am currently working on JavaScript and Advanced Object-Oriented Programming using C#.
         </p>
+        <h3>My Skills</h3>
+        <ul id="skills-list"></ul>
       </section>
+
+      <section id="featured-content">
+        <h2>Featured Content</h2>
+        <div id="uni-resources" class="featured-div" style="display:none;">
+              <h3>University Resources</h3>
+              <p><a href="https://www.ecpi.edu/">Visit ECPI Program Page</a></p>
+          </div>
+          <div id="personal-projects" class="featured-div" style="display:none;">
+              <h3>Personal Projects</h3>
+              <p><a href="https://github.com/">Check out my GitHub</a></p>
+          </div>
+      </section>
+
       <section id="projects">
         <h2>My Projects</h2>
         <p>Check out some of my recent work on GitHub:</p>
@@ -152,7 +214,7 @@
     </main>
     <script> 
       //prompt user for their name and store it in a variable 
-      let userName = propmt("Please enter your name to visit the site:");
+      let userName = prompt("Please enter your name to visit the site:");
 
       //check if the user actually entered a name 
       if (userName && userName.trim() !== "") {
@@ -161,6 +223,60 @@
         //dynamically update text content
         welcomeHeader.innerText = "welcome, " + userName + "!";
       }
+
+      //Conditional Logic - Get the number of projects currently listed
+      const projectCount = document.querySelectorAll('.project-item').length;
+      const uniResourcesDiv = document/getElementById('uni-resources');
+      const personalProjectsDiv = document.getElementById('personal-projects');
+
+      //Logic if fewer than 3, show both. otherwise show Personal only.
+      if (projectCount < 3) {
+          uniResourcesDiv.style.display = 'block';
+          personalProjectsDiv.style.display = 'block';
+      } else {
+          uniResourcesDiv.style.display = 'none';
+          personalProjectsDiv.style.display = 'block';
+      }
+
+      //Implement a Loop (skills list)
+      const skills = ["HTML", "CSS", "JavaScript", "C#", "SQL", "GitHub"];
+      const skillsList = document.getElementById('skills-list');
+
+      skills.forEach(skill => {
+          let li = document.createElement('li');
+          li.textContent = skill;
+          skillsList.appendChild(li);
+      });
+
+      //Dark mode slider
+      const toggleSwitch = document.getElementById('dark-mode-toggle');
+
+      toggleSwitch.addEventListener('change', function() {
+          if (this.checked) {
+              document.body.classList.add('dark-mode');
+          } else {
+              document.body.classList.remove('dark-mode');
+          }
+      });
+
+      //interactivity on submit button 
+      const submitBtn = document.getElementById('submit-btn');
+      const nameInput = document.getElementById('sender-name');
+
+      submitBtn.addEventListener('click', function(event) {
+          // Prevent page refresh
+          event.preventDefault();
+          
+          // Get the name entered
+          const senderName = nameInput.value;
+
+          if(senderName) {
+            alert("Thank you, " + senderName + ", your message has been sent!");
+          } else {
+            alert("Please enter your name before sending.");
+          }
+      });
+      
     </script>
   </body>
 </html>
