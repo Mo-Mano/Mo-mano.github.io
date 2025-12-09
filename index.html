@@ -263,20 +263,60 @@
       const submitBtn = document.getElementById('submit-btn');
       const nameInput = document.getElementById('sender-name');
 
-      submitBtn.addEventListener('click', function(event) {
-          // Prevent page refresh
-          event.preventDefault();
-          
-          // Get the name entered
-          const senderName = nameInput.value;
-
-          if(senderName) {
-            alert("Thank you, " + senderName + ", your message has been sent!");
-          } else {
-            alert("Please enter your name before sending.");
-          }
-      });
+      //updated code to add a timed confirmation for form submissions 
+      //select form to append messages
+      const contactForm = document.querySelector('form');
       
+      //create status message element to hold loading and success text
+      const statusMessage = document.creaetElement('div');
+      statusMessage.style.marginTop = "10px";
+      statusMessage.style.fontWeight = "bold";
+      contactForm.appendChild(statusMessage);
+
+      submitBtn.addEventListener('click', function(event) {
+        //prevent page reload
+        event.preventDefault();
+
+        const senderName = nameInput.value;
+
+        if(senderName) {
+          //display loading message
+          statusMessage.innerText = "Sending Message...";
+          statusMessage.style.color = "blue";
+          submitBtn.disabled = true; //disabled to prevent double clicking
+
+          //use setTimeout to delay confirmation message
+          setTimeout(function() {
+            //replace loading message with confirmation
+            statusMessage.innerText = "Message sent successfully! Thank you, " + senderName + '.';
+            statusMessage.style.color = "green";
+            
+            //re-enable button
+            submitBtn.disabled = false;
+
+          }, 2000);
+        } else {
+          alert("Please enter your name before sending.");
+        }
+      });
+            //--Dynamically add new section or message--
+      //creating a new paragraph to introduce a recent update
+      const updatePara = document.createElement('p');
+      updatePara.innerHTML = "Update: I am currently working on a C# project, creating a Library system that incluudes a recommedation system.";
+      updatePara.style.fontStyle = "italic";
+      updatePara.style.color = "#555";
+
+      //appending it to the About Me section 
+      const aboutSection = document.getElementById('about');
+      aboutSection.appendChild(updatePara);
+
+      //--Reference and Modify existing elements
+      //add a bottom border to the main header
+      const mainHeader = document.querySelector('header');
+      mainHeader.style.borderBottom = "4px solid #007BFF";
+      //updating my projects heading 
+      const projectHeading = document.querySelector('#projects h2');
+      projectHeading.innerText = 'My Recent Projects (Updated)'; 
     </script>
   </body>
 </html>
