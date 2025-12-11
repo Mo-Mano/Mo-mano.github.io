@@ -195,7 +195,7 @@
       <section id="contact">
         <h2>Contact Me</h2>
         <p>Feel free to reach out using the form below.</p>
-        <form action="#" method="post>
+        <form action="#" method="post">
           <label for="sender-name">Name:</label>
           <input type="text" id="sender-name" name="sender-name" placeholder="Your Name" required>
 
@@ -268,7 +268,7 @@
       const contactForm = document.querySelector('form');
       
       //create status message element to hold loading and success text
-      const statusMessage = document.creaetElement('div');
+      const statusMessage = document.createElement('div');
       statusMessage.style.marginTop = "10px";
       statusMessage.style.fontWeight = "bold";
       contactForm.appendChild(statusMessage);
@@ -302,7 +302,7 @@
             //--Dynamically add new section or message--
       //creating a new paragraph to introduce a recent update
       const updatePara = document.createElement('p');
-      updatePara.innerHTML = "Update: I am currently working on a C# project, creating a Library system that incluudes a recommedation system.";
+      updatePara.innerHTML = "Update: I am currently working on a C# project, creating a Library system that includes a recommendation system.";
       updatePara.style.fontStyle = "italic";
       updatePara.style.color = "#555";
 
