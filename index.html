@@ -73,6 +73,8 @@
             flex: 1;
             min-width: 200px;
             text-align: center;
+            padding: 10px;
+            border: 1px solid #eee;
         }
         .project-item img {
             max-width: 100%;
@@ -80,6 +82,9 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+        .project-item h3 { margin-top: 10px; }
+        .project-item p { font-size: 0.9em; color: #666;}
+
         form {
             display: flex;
             flex-direction: column;
@@ -242,29 +247,9 @@
       <section id="projects">
         <h2>My Projects</h2>
         <p>Check out some of my recent work on GitHub:</p>
-        <div class="project-grid">
-                <div class="project-item">
-                    <h3>Project Alpha</h3>
-                    <a href="https://github.com" target="_blank">
-                        <img src="https://placehold.co/250x150?text=Project+Alpha" alt="Project Alpha Thumbnail">
-                    </a>
-                </div>
-
-                <div class="project-item">
-                    <h3>Project Beta</h3>
-                    <a href="https://github.com" target="_blank">
-                        <img src="https://placehold.co/250x150?text=Project+Beta" alt="Project Beta Thumbnail">
-                    </a>
-                </div>
-
-                <div class="project-item">
-                    <h3>Project Gamma</h3>
-                    <a href="https://github.com" target="_blank">
-                        <img src="https://placehold.co/250x150?text=Project+Gamma" alt="Project Gamma Thumbnail">
-                    </a>
-                </div>
-            </div>
+        <div class="project-grid" id="project-container"></div>
       </section>
+
       <section id="contact">
         <h2>Contact Me</h2>
         <p>Feel free to reach out using the form below.</p>
@@ -288,6 +273,88 @@
       </section>
     </main>
     <script> 
+
+    //Define 3 JavaScript objects holding project info
+    const project1 = {
+          title: "Library Management System",
+          summary: "A C# application for managing book rentals and returns. Includes a recommendation engine.",
+          image: "https://placehold.co/250x150?text=Library+System",
+          link: "https://github.com/Mo-Mano/MonMan-ECPI"
+      };
+
+      const project2 = {
+          title: "Weather Dashboard",
+          summary: "A JavaScript web app that fetches live weather data using an API and local storage.",
+          image: "https://placehold.co/250x150?text=Weather+App",
+          link: "https://github.com/example/weather"
+      };
+
+      const project3 = {
+          title: "Personal Portfolio",
+          summary: "A responsive HTML/CSS portfolio site featuring dark mode and dynamic content loading.",
+          image: "https://placehold.co/250x150?text=Portfolio+Site",
+          link: "https://mo-mano.github.io/"
+      };
+
+      //define an array to contain the objects
+      const projectsArray = [project1, project2, project3];
+
+      //Store and Parse Information
+      //Check if data already exists in session storage
+      let storedProjects = sessionStorage.getItem("myProjects");
+
+      if (!storedProjects) {
+        let projectsString = JSON.stringify(projectsArray);
+          sessionStorage.setItem("myProjects", projectsString);
+          console.log("Projects saved to Session Storage.");
+          storedProjects = projectsString; 
+      } else {
+          console.log("Projects found in Session Storage. Loading...");
+      }
+      //parse string back into an object array
+      const loadedProjects = JSON.parse(storedProjects);
+
+      //Render Projects Dynamically
+      //select project section using a DOM selector
+      const projectContainer = document.getElementById("project-container");
+
+      //Clear existing HTML content
+      projectContainer.innerHTML = "";
+
+      //Loop through array and create DOM elements
+      loadedProjects.forEach(project => {
+          //Create main div
+          let projectDiv = document.createElement("div");
+          projectDiv.className = "project-item";
+
+          //Create Title
+          let titleElem = document.createElement("h3");
+          titleElem.textContent = project.title;
+
+          //Create Summary
+          let summaryElem = document.createElement("p");
+          summaryElem.textContent = project.summary;
+
+          //Create Link
+          let linkElem = document.createElement("a");
+          linkElem.href = project.link;
+          linkElem.target = "_blank"; 
+
+          //Create Image
+          let imgElem = document.createElement("img");
+          imgElem.src = project.image;
+          imgElem.alt = project.title + " Thumbnail";
+
+          //Assemble the elements
+          linkElem.appendChild(imgElem); //Image inside link
+          projectDiv.appendChild(titleElem);
+          projectDiv.appendChild(linkElem);
+          projectDiv.appendChild(summaryElem);
+
+          //Add to the page
+          projectContainer.appendChild(projectDiv);
+      });
+
       //Modal Logic - replaces old prompt
       //get modal
       const modal = document.getElementById("welcome-modal");
@@ -323,17 +390,16 @@
           localStorage.setItem('theme', 'dark-mode');
         } else {
           document.body.classList.remove('dark-mode');
-          localStoarge.setItem('theme', '');
+          localStorage.setItem('theme', '');
         }
       });
 
       //Conditional Logic - Get the number of projects currently listed
-      const projectCount = document.querySelectorAll('.project-item').length;
       const uniResourcesDiv = document.getElementById('uni-resources');
       const personalProjectsDiv = document.getElementById('personal-projects');
 
-      //Logic if fewer than 3, show both. otherwise show Personal only.
-      if (projectCount < 3) {
+      // Use loadedProjects.length instead of DOM query since we built it dynamically
+      if (loadedProjects.length < 3) {
           uniResourcesDiv.style.display = 'block';
           personalProjectsDiv.style.display = 'block';
       } else {
@@ -354,9 +420,6 @@
       //interactivity on submit button 
       const submitBtn = document.getElementById('submit-btn');
       const nameInput = document.getElementById('sender-name');
-
-      //updated code to add a timed confirmation for form submissions 
-      //select form to append messages
       const contactForm = document.querySelector('form');
       
       //create status message element to hold loading and success text
@@ -368,45 +431,36 @@
       submitBtn.addEventListener('click', function(event) {
         //prevent page reload
         event.preventDefault();
-
         const senderName = nameInput.value;
 
         if(senderName) {
           //display loading message
           statusMessage.innerText = "Sending Message...";
           statusMessage.style.color = "blue";
-          submitBtn.disabled = true; //disabled to prevent double clicking
-
+          submitBtn.disabled = true; 
           //use setTimeout to delay confirmation message
           setTimeout(function() {
             //replace loading message with confirmation
             statusMessage.innerText = "Message sent successfully! Thank you, " + senderName + '.';
             statusMessage.style.color = "green";
-            
-            //re-enable button
             submitBtn.disabled = false;
-
           }, 2000);
         } else {
           alert("Please enter your name before sending.");
         }
       });
-            //--Dynamically add new section or message--
-      //creating a new paragraph to introduce a recent update
+            //--Dynamic Updates
       const updatePara = document.createElement('p');
       updatePara.innerHTML = "Update: I am currently working on a C# project, creating a Library system that includes a recommendation system.";
       updatePara.style.fontStyle = "italic";
       updatePara.style.color = "#555";
 
-      //appending it to the About Me section 
       const aboutSection = document.getElementById('about');
       aboutSection.appendChild(updatePara);
 
-      //--Reference and Modify existing elements
-      //add a bottom border to the main header
       const mainHeader = document.querySelector('header');
       mainHeader.style.borderBottom = "4px solid #007BFF";
-      //updating my projects heading 
+      
       const projectHeading = document.querySelector('#projects h2');
       projectHeading.innerText = 'My Recent Projects (Updated)'; 
     </script>
